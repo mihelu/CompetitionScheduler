@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: mhl
+  Date: 13.01.13
+  Time: 15:11
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+<h:body>
+    <ui:composition>
+
+        <div id="loginLogout">
+            <h:form id="loginForm">
+
+                <p:toolbar>
+
+                    <p:toolbarGroup align="right">
+                        <p:commandButton value="Zarejestruj" rendered="#{!authorization.authorized()}"/>
+                        <p:commandButton icon="ui-icon-power" onclick="loginDlg.show()" value="Zaloguj"
+                                         rendered="#{!authorization.authorized()}"/>
+                        <p:commandButton icon="ui-icon-power" actionListener="#{authorization.logout}" value="Wyloguj"
+                                         rendered="#{authorization.authorized()}" update="@form :contentForm"/>
+                    </p:toolbarGroup>
+
+                </p:toolbar>
+            </h:form>
+        </div>
+
+        <p:dialog id="loginDialog" header="Logowanie" widgetVar="loginDlg" modal="true" resizable="false"
+                  draggable="false" position="top" showEffect="fade" hideEffect="fade">
+            <h:form id="loginDialogForm">
+                <p:messages id="loginMessages" closable="true"/>
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="email" value="Email:"/>
+                    <p:inputText value="#{authorization.email}" id="email" required="true" label="email"
+                                 requiredMessage="Nie podano emaila"/>
+                    <h:outputLabel for="password" value="Hasło:"/>
+                    <h:inputSecret id="password" required="true" label="password" requiredMessage="Nie podano hasła"/>
+                    <h:inputHidden id="hashedPassword" value="#{authorization.password}"/>
+                    <f:facet name="footer">
+                        <p:commandButton id="loginButton" value="Zaloguj"
+                                         onstart="$('[id$=hashedPassword]').val(SHA1($('[id$=password]').val()))"
+                                         actionListener="#{authorization.login}" update=":contentForm :loginForm @form"
+                                         oncomplete="handleLoginRequest(xhr, status, args,loginDlg)"/>
+                    </f:facet>
+                </h:panelGrid>
+
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</h:body>
+
+</html>

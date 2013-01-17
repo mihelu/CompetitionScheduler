@@ -40,9 +40,8 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>3.4</version>
+            <version>3.4.2</version>
         </dependency>
-
         <!-- JSF 2 -->
         <dependency>
             <groupId>com.sun.faces</groupId>
@@ -78,6 +77,12 @@
             <version>1.2.2</version>
         </dependency>
         <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>11.2.0.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
@@ -88,7 +93,6 @@
             <artifactId>annotations</artifactId>
             <version>9.0.4</version>
         </dependency>
-
 
     </dependencies>
 </project>
