@@ -22,6 +22,12 @@
 
 <h:body>
     <div id="page">
+        <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/>
+
+        <p:dialog modal="true" widgetVar="statusDialog" header="Wczytywanie..."
+                  draggable="false" closable="false">
+            <p:graphicImage value="resources/images/ajaxloadingbar.gif" />
+        </p:dialog>
 
         <div id="header">
             <ui:insert name="header">

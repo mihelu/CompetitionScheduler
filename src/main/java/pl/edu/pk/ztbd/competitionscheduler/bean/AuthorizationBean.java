@@ -1,13 +1,18 @@
 package pl.edu.pk.ztbd.competitionscheduler.bean;
 
 import org.primefaces.context.RequestContext;
+import pl.edu.pk.ztbd.competitionscheduler.JSFUtil;
+import pl.edu.pk.ztbd.competitionscheduler.dao.AuthenticationDAO;
+import pl.edu.pk.ztbd.competitionscheduler.dao.AuthenticationDAOImpl;
 import pl.edu.pk.ztbd.competitionscheduler.dto.User;
+import pl.edu.pk.ztbd.competitionscheduler.exceptions.AuthenticationException;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,24 +25,41 @@ import java.io.Serializable;
 @SessionScoped
 public class AuthorizationBean implements Serializable {
 
+    private static final String LOGIN_MESSAGES = "loginMessages";
     private User user;
     private String email;
     private String password;
 
     public void login(ActionEvent event) {
-        user = new User();
-        user.setEmail(email);
-        user.setPassword(password);
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.addCallbackParam("success", authorized());
+        AuthenticationDAO dao = new AuthenticationDAOImpl();
+        try {
+            user = dao.login(email, password);
+        } catch (AuthenticationException e) {
+            JSFUtil.addMessageError("Błąd logowania", LOGIN_MESSAGES);
+        } finally {
+            if(authorized()) {
+                email = null;
+                password = null;
+            }
+            RequestContext context = RequestContext.getCurrentInstance();
+            context.addCallbackParam("success", authorized());
+        }
     }
 
     public void logout(ActionEvent event) {
-        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("authorization", new AuthorizationBean());
     }
 
     public boolean authorized() {
         return user != null;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getEmail() {

@@ -10,7 +10,17 @@ package pl.edu.pk.ztbd.competitionscheduler.dto;
 public class User {
 
     private String email;
+    private String username;
     private String password;
+
+    public User() {
+    }
+
+    public User(String email, String username, String password) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+    }
 
     public String getEmail() {
         return email;
@@ -18,6 +28,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

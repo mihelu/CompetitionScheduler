@@ -7,7 +7,6 @@ import java.util.Date;
  * User: mhl
  * Date: 12.01.13
  * Time: 18:23
- * To change this template use File | Settings | File Templates.
  */
 public class Player {
 

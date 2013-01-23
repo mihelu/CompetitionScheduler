@@ -5,12 +5,13 @@ package pl.edu.pk.ztbd.competitionscheduler.dto;
  * User: mhl
  * Date: 12.01.13
  * Time: 18:55
- * To change this template use File | Settings | File Templates.
  */
 public class Match {
 
-    public Team home;
-    public Team away;
+    private Team home;
+    private Team away;
+    private int homeScore;
+    private int awayScore;
 
     public Team getHome() {
         return home;
@@ -26,5 +27,21 @@ public class Match {
 
     public void setAway(Team away) {
         this.away = away;
+    }
+
+    public int getHomeScore() {
+        return homeScore;
+    }
+
+    public void setHomeScore(int homeScore) {
+        this.homeScore = homeScore;
+    }
+
+    public int getAwayScore() {
+        return awayScore;
+    }
+
+    public void setAwayScore(int awayScore) {
+        this.awayScore = awayScore;
     }
 }

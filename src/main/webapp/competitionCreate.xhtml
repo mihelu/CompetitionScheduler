@@ -2,8 +2,8 @@
 <!--
   Created by IntelliJ IDEA.
   User: mhl
-  Date: 12.01.13
-  Time: 17:32
+  Date: 13.01.13
+  Time: 15:21
 -->
 <!DOCTYPE html
         PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -15,13 +15,12 @@
       xmlns:p="http://primefaces.org/ui">
 
 <h:body>
-
-
-    <ui:composition template="template/template.xhtml">
-
-
+    <ui:composition>
+        <p:commandButton value="Powrót" icon="ui-icon ui-icon-arrowthick-1-w" actionListener="#{navigation.navigateToPrev}" update=":contentForm"/>
+        <div class="competitonContent">
+            test create
+        </div>
     </ui:composition>
-
 </h:body>
 
 </html>

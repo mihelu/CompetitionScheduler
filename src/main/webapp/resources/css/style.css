@@ -24,6 +24,11 @@ body {
     color: black;
 }
 
+.competitonContent{
+    width: 80%;
+    margin: auto;
+}
+
 .ui-widget {
     font-size: 12px !important;
 }

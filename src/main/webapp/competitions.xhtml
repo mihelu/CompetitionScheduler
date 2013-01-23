@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: mhl
+  Date: 13.01.13
+  Time: 15:21
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<h:body>
+    <ui:composition>
+        <div class="competitonContent">
+            <p:commandButton actionListener="#{competition.navigateToAdd}" update=":contentForm" icon="ui-icon-plus" value="Dodaj nowe zawody" rendered="#{authorization.authorized()}"/>
+            <p:dataTable id="competitonsDataTable" value="#{competition.competitionList}" var="comp"
+                         paginatorPosition="bottom" paginator="true"
+                         emptyMessage="Brak zawodów">
+
+                <p:column headerText="Logo" style="width: 80px">
+                    <p:graphicImage value="#{comp.image!=null?comp.image:'resources/images/noPhoto.gif'}" width="70"/>
+                </p:column>
+
+                <p:column headerText="Nazwa">
+                    <h:outputText value="#{comp.name}"/>
+                </p:column>
+
+                <p:column headerText="Rozpoczęcie" style="width: 70px">
+                    <h:outputText value="#{comp.dateFrom}"/>
+                </p:column>
+
+                <p:column headerText="Zakończenie" style="width: 70px">
+                    <h:outputText value="#{comp.dateTo}"/>
+                </p:column>
+
+                <p:column headerText="Usuń" style="width: 25px; text-align: center;"
+                          rendered="#{authorization.authorized()}">
+                    <p:commandButton onclick="confirmRemove.show()" icon="ui-icon-trash" title="Usuń">
+                        <f:setPropertyActionListener value="#{comp}" target="#{competition.selectedCompetition}"/>
+                    </p:commandButton>
+                </p:column>
+
+                <p:column headerText="Modyfikuj" style="text-align: center; width: 25px"
+                          rendered="#{authorization.authorized()}">
+                    <p:commandButton actionListener="#{competition.navigateToModify}" update=":contentForm" icon="ui-icon-gear"
+                                     title="Modyfikuj">
+                        <f:setPropertyActionListener value="#{comp}" target="#{competition.selectedCompetition}"/>
+                    </p:commandButton>
+                </p:column>
+
+                <p:column headerText="Detale" style="width: 25px; text-align: center; ">
+                    <p:commandButton actionListener="#{competition.navigateToDetails}" update=":contentForm"
+                                     icon="ui-icon-search">
+                        <f:setPropertyActionListener value="#{comp}" target="#{competition.selectedCompetition}"/>
+                    </p:commandButton>
+                </p:column>
+
+            </p:dataTable>
+        </div>
+
+        <p:confirmDialog id="confirmRemove" message="Czy napewno chcesz usunąć wybrane zawody?"
+                         header="Usuń" severity="alert" widgetVar="confirmRemove" position="top">
+            <div style="text-align: center">
+                <p:commandButton id="confirm" value="Tak" update=":contentForm" oncomplete="confirmRemove.hide()"
+                                 actionListener="#{competition.remove}"/>
+                <p:commandButton id="decline" value="Nie" onclick="confirmRemove.hide()" type="button"/>
+            </div>
+
+        </p:confirmDialog>
+
+    </ui:composition>
+</h:body>
+
+</html>
