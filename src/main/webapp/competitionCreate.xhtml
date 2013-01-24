@@ -12,14 +12,99 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
 
 <h:body>
     <ui:composition>
-        <p:commandButton value="Powrót" icon="ui-icon ui-icon-arrowthick-1-w" actionListener="#{navigation.navigateToPrev}" update=":contentForm"/>
+        <p:commandButton value="Powrót" icon="ui-icon ui-icon-arrowthick-1-w"
+                         actionListener="#{navigation.navigateToPrev}" update=":contentForm"/>
+
         <div class="competitonContent">
-            test create
+            <p:panel header="Dane podstawowe">
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputText value="Nazwa: "/>
+                    <p:inputText value="#{competition.selectedCompetition.name}"/>
+
+                    <h:outputText value="Opis: "/>
+                    <p:inputText value="#{competition.selectedCompetition.description}"/>
+
+                    <h:outputText value="Data od: "/>
+                    <p:calendar value="#{competition.selectedCompetition.dateFrom}"/>
+
+                    <h:outputText value="Data do: "/>
+                    <p:calendar value="#{competition.selectedCompetition.dateTo}"/>
+
+                    <h:outputLabel for="spinnerStep" value="Ilość grup: "/>
+                    <p:spinner id="spinnerStep"
+                               value="#{competition.numberfGroups}" stepFactor="1" min="1" max="4">
+                        <p:ajax update="createGroupsPanel" process="@this" listener="#{competition.setGroupsList}"/>
+                    </p:spinner>
+
+                    <h:outputLabel for="spinnerStep1" value="Ilość drużyn w grupie: "/>
+                    <p:spinner id="spinnerStep1"
+                               value="#{competition.numberOfTeamsInGroup}" stepFactor="1" min="4" max="8">
+                        <p:ajax update="createGroupsPanel" process="@this"/>
+                    </p:spinner>
+                </h:panelGrid>
+            </p:panel>
+
+            <p:panel header="Grupy">
+
+                <p:outputPanel id="createGroupsPanel">
+                    <p:messages id="groupsMessages" closable="true"/>
+                    <ui:repeat value="#{competition.selectedCompetition.groups}" var="grupa" varStatus="status">
+                        <p:panel header="#{grupa.name}">
+                            <p:commandButton onclick="addTeamDlg.show()" icon="ui-icon-plus" value="Dodaj">
+                                <f:setPropertyActionListener value="#{status.index}"
+                                                             target="#{competition.selectedGroupIndex}"/>
+                            </p:commandButton>
+                            <p:dataTable var="team" value="#{grupa.teams}">
+
+                                <p:column headerText="Logo" style="width: 60px">
+                                    <p:graphicImage
+                                            value="#{team.image!=null?team.image:'resources/images/noPhoto.gif'}"
+                                            width="50"/>
+                                </p:column>
+
+                                <p:column headerText="Nazwa">
+                                    <h:outputText value="#{team.name}"/>
+                                </p:column>
+
+                            </p:dataTable>
+                        </p:panel>
+                    </ui:repeat>
+                </p:outputPanel>
+            </p:panel>
+            <p:commandButton value="Zapisz zawody" actionListener="#{competition.add}" update=":contentForm"/>
         </div>
+
+        <p:dialog id="addTeam" header="Dodaj drużyne" widgetVar="addTeamDlg" modal="true" resizable="false"
+                  draggable="false" position="top" showEffect="fade" hideEffect="fade" width="500">
+            <h:form id="addTeamForm">
+                <p:dataTable var="team" value="#{competition.teamList}" id="teamTable">
+
+                    <p:column headerText="Dodaj" style="width: 60px">
+                        <p:commandButton actionListener="#{competition.addTeamToGroup}" oncomplete="addTeamDlg.hide()"
+                                         icon="ui-icon-plus" title="Dodaj"
+                                         update=":contentForm:createGroupsPanel :contentForm:addTeamForm:teamTable">
+                            <f:attribute name="team" value="#{team}"/>
+                        </p:commandButton>
+                    </p:column>
+
+                    <p:column headerText="Logo" style="width: 60px">
+                        <p:graphicImage value="#{team.image!=null?team.image:'resources/images/noPhoto.gif'}"
+                                        width="50"/>
+                    </p:column>
+
+                    <p:column headerText="Nazwa">
+                        <h:outputText value="#{team.name}"/>
+                    </p:column>
+
+
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
     </ui:composition>
 </h:body>
 

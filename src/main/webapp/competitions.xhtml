@@ -18,8 +18,9 @@
 <h:body>
     <ui:composition>
         <div class="competitonContent">
-            <p:commandButton actionListener="#{competition.navigateToAdd}" update=":contentForm" icon="ui-icon-plus" value="Dodaj nowe zawody" rendered="#{authorization.authorized()}"/>
-            <p:dataTable id="competitonsDataTable" value="#{competition.competitionList}" var="comp"
+            <p:commandButton actionListener="#{competition.navigateToAdd}" update=":contentForm" icon="ui-icon-plus"
+                             value="Dodaj nowe zawody" rendered="#{authorization.authorized()}"/>
+            <p:dataTable id="competitonsDataTable" value="#{competition.competitionList}" var="comp" rows="5"
                          paginatorPosition="bottom" paginator="true"
                          emptyMessage="Brak zawodów">
 
@@ -32,24 +33,20 @@
                 </p:column>
 
                 <p:column headerText="Rozpoczęcie" style="width: 70px">
-                    <h:outputText value="#{comp.dateFrom}"/>
+                    <h:outputText value="#{comp.dateFrom}">
+                        <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                    </h:outputText>
                 </p:column>
 
                 <p:column headerText="Zakończenie" style="width: 70px">
-                    <h:outputText value="#{comp.dateTo}"/>
+                    <h:outputText value="#{comp.dateTo}">
+                        <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                    </h:outputText>
                 </p:column>
 
                 <p:column headerText="Usuń" style="width: 25px; text-align: center;"
                           rendered="#{authorization.authorized()}">
                     <p:commandButton onclick="confirmRemove.show()" icon="ui-icon-trash" title="Usuń">
-                        <f:setPropertyActionListener value="#{comp}" target="#{competition.selectedCompetition}"/>
-                    </p:commandButton>
-                </p:column>
-
-                <p:column headerText="Modyfikuj" style="text-align: center; width: 25px"
-                          rendered="#{authorization.authorized()}">
-                    <p:commandButton actionListener="#{competition.navigateToModify}" update=":contentForm" icon="ui-icon-gear"
-                                     title="Modyfikuj">
                         <f:setPropertyActionListener value="#{comp}" target="#{competition.selectedCompetition}"/>
                     </p:commandButton>
                 </p:column>

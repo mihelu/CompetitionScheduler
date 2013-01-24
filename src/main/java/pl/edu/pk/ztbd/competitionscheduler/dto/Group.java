@@ -10,8 +10,18 @@ import java.util.List;
  */
 public class Group {
 
+    private int id;
     private String name;
     private List<Team> teams;
+    private List<Match> matches;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -27,5 +37,13 @@ public class Group {
 
     public void setTeams(List<Team> teams) {
         this.teams = teams;
+    }
+
+    public List<Match> getMatches() {
+        return matches;
+    }
+
+    public void setMatches(List<Match> matches) {
+        this.matches = matches;
     }
 }

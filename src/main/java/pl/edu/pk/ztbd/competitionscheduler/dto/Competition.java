@@ -17,7 +17,6 @@ public class Competition {
     private Date dateFrom;
     private Date dateTo;
     private String image;
-    private int type;
     private List<Group> groups;
 
     public int getId() {
@@ -66,14 +65,6 @@ public class Competition {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 
     public List<Group> getGroups() {

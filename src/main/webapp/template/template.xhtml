@@ -37,7 +37,7 @@
 
         <div id="content">
             <ui:insert name="content">
-                <h:form id="contentForm">
+                <h:form id="contentForm" enctype="multipart/form-data">
                     <p:messages globalOnly="true" id="globalMessages" closable="true"/>
                     <ui:include src="#{navigation.page}.xhtml"/>
                 </h:form>

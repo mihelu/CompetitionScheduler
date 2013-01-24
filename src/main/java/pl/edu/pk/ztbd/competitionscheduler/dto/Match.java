@@ -8,10 +8,19 @@ package pl.edu.pk.ztbd.competitionscheduler.dto;
  */
 public class Match {
 
+    private int id;
     private Team home;
     private Team away;
-    private int homeScore;
-    private int awayScore;
+    private Integer homeScore;
+    private Integer awayScore;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Team getHome() {
         return home;
@@ -29,19 +38,19 @@ public class Match {
         this.away = away;
     }
 
-    public int getHomeScore() {
+    public Integer getHomeScore() {
         return homeScore;
     }
 
-    public void setHomeScore(int homeScore) {
+    public void setHomeScore(Integer homeScore) {
         this.homeScore = homeScore;
     }
 
-    public int getAwayScore() {
+    public Integer getAwayScore() {
         return awayScore;
     }
 
-    public void setAwayScore(int awayScore) {
+    public void setAwayScore(Integer awayScore) {
         this.awayScore = awayScore;
     }
 }

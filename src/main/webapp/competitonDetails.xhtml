@@ -12,14 +12,86 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui" >
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
 
 <h:body>
     <ui:composition>
-        <p:commandButton value="Powrót" icon="ui-icon ui-icon-arrowthick-1-w" actionListener="#{navigation.navigateToPrev}" update=":contentForm"/>
-        <div class="competitonContent">
+        <p:commandButton value="Powrót" icon="ui-icon ui-icon-arrowthick-1-w"
+                         actionListener="#{navigation.navigateToPrev}" update=":contentForm"/>
 
-            TEST
+        <div class="competitonContent">
+            <p:panel header="Dane podstawowe">
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputText value="Nazwa: "/>
+                    <h:outputText value="#{competition.selectedCompetition.name}"/>
+
+                    <h:outputText value="Opis: "/>
+                    <h:outputText value="#{competition.selectedCompetition.description}"/>
+
+                    <h:outputText value="Data od: "/>
+                    <h:outputText value="#{competition.selectedCompetition.dateFrom}">
+                        <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                    </h:outputText>
+
+                    <h:outputText value="Data do: "/>
+                    <h:outputText value="#{competition.selectedCompetition.dateTo}">
+                        <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                    </h:outputText>
+                </h:panelGrid>
+            </p:panel>
+
+            <p:panel header="Grupy">
+                <p:outputPanel id="createGroupsPanel">
+                    <ui:repeat value="#{competition.selectedCompetition.groups}" var="grupa" varStatus="status">
+                        <p:panel header="#{grupa.name}">
+                            <p:dataTable var="team" value="#{grupa.teams}">
+                                <p:column headerText="Logo" style="width: 60px">
+                                    <p:graphicImage
+                                            value="#{team.image!=null?team.image:'resources/images/noPhoto.gif'}"
+                                            width="50"/>
+                                </p:column>
+
+                                <p:column headerText="Nazwa">
+                                    <h:outputText value="#{team.name}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:panel>
+                    </ui:repeat>
+                </p:outputPanel>
+            </p:panel>
+
+            <p:panel header="Mecze">
+                <p:dataGrid value="#{competition.selectedCompetition.groups}" var="grupa" columns="2">
+                    <p:panel header="#{grupa.name}">
+                        <p:dataGrid var="match" value="#{grupa.matches}" columns="1">
+
+                            <h:outputText value="#{match.home.name}"/>
+                            <p:commandLink value=" x - x "
+                                           rendered="#{match.homeScore==null or match.awayScore==null}"
+                                           title="Uzupełnij wynik" onclick="setScore.show()">
+                                <f:setPropertyActionListener value="#{match}" target="#{competition.selectedMatch}"/>
+                            </p:commandLink>
+                            <h:outputText value=" #{match.homeScore} - #{match.awayScore} "
+                                          rendered="#{match.homeScore!=null or match.awayScore!=null}"/>
+                            <h:outputText value="#{match.away.name}"/>
+                        </p:dataGrid>
+                    </p:panel>
+                </p:dataGrid>
+            </p:panel>
+
+            <p:dialog id="setScore" header="Dodaj drużyne" widgetVar="setScoreDlg" modal="true" resizable="false"
+                      draggable="false" position="top" showEffect="fade" hideEffect="fade">
+                <h:form id="setScoreForm">
+                    <h:outputText value="#{competition.selectedMatch.home.name} : "/>
+                    <p:inputText value="#{competition.selectedMatch.homeScore}"/>
+
+                    <h:outputText value="#{competition.selectedMatch.away.name}"/>
+                    <p:inputText value="#{competition.selectedMatch.awayScore}"/>
+
+                    <p:commandButton value="Zapisz" actionListener="#{competition.modifyMatchResult}" oncomplete="setScoreDlg.hide()" update=":contentForm"/>
+                </h:form>
+            </p:dialog>
         </div>
     </ui:composition>
 </h:body>

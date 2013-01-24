@@ -2,6 +2,8 @@ package pl.edu.pk.ztbd.competitionscheduler.dao;
 
 import org.jetbrains.annotations.NotNull;
 import pl.edu.pk.ztbd.competitionscheduler.dto.Competition;
+import pl.edu.pk.ztbd.competitionscheduler.dto.Match;
+import pl.edu.pk.ztbd.competitionscheduler.dto.Team;
 
 import java.util.List;
 
@@ -21,6 +23,11 @@ public interface CompetitionDAO {
 
     Competition get(int id);
 
+    void modifyMatchResult(Match match);
+
     @NotNull
     List<Competition> findAll();
+
+   @NotNull
+    List<Team> findAllTeams();
 }
