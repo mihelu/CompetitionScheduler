@@ -54,7 +54,7 @@
                 <p:column headerText="Detale" style="width: 25px; text-align: center; ">
                     <p:commandButton actionListener="#{competition.navigateToDetails}" update=":contentForm"
                                      icon="ui-icon-search">
-                        <f:setPropertyActionListener value="#{comp}" target="#{competition.selectedCompetition}"/>
+                        <f:attribute name="compId" value="#{comp.id}"/>
                     </p:commandButton>
                 </p:column>
 

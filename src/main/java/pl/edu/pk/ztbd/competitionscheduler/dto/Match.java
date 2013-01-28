@@ -11,8 +11,8 @@ public class Match {
     private int id;
     private Team home;
     private Team away;
-    private Integer homeScore;
-    private Integer awayScore;
+    private Long homeScore;
+    private Long awayScore;
 
     public int getId() {
         return id;
@@ -38,19 +38,19 @@ public class Match {
         this.away = away;
     }
 
-    public Integer getHomeScore() {
+    public Long getHomeScore() {
         return homeScore;
     }
 
-    public void setHomeScore(Integer homeScore) {
+    public void setHomeScore(Long homeScore) {
         this.homeScore = homeScore;
     }
 
-    public Integer getAwayScore() {
+    public Long getAwayScore() {
         return awayScore;
     }
 
-    public void setAwayScore(Integer awayScore) {
+    public void setAwayScore(Long awayScore) {
         this.awayScore = awayScore;
     }
 }

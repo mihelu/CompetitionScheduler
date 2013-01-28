@@ -1,4 +1,4 @@
-package pl.edu.pk.ztbd.competitionscheduler;
+package pl.edu.pk.ztbd.competitionscheduler.utils;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;

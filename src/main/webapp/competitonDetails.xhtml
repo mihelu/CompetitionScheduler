@@ -51,9 +51,11 @@
                                             value="#{team.image!=null?team.image:'resources/images/noPhoto.gif'}"
                                             width="50"/>
                                 </p:column>
-
                                 <p:column headerText="Nazwa">
                                     <h:outputText value="#{team.name}"/>
+                                </p:column>
+                                <p:column headerText="Punkty" style="width: 30px">
+                                    <h:outputText value="#{team.points}" />
                                 </p:column>
                             </p:dataTable>
                         </p:panel>
@@ -63,34 +65,42 @@
 
             <p:panel header="Mecze">
                 <p:dataGrid value="#{competition.selectedCompetition.groups}" var="grupa" columns="2">
-                    <p:panel header="#{grupa.name}">
-                        <p:dataGrid var="match" value="#{grupa.matches}" columns="1">
-
-                            <h:outputText value="#{match.home.name}"/>
-                            <p:commandLink value=" x - x "
-                                           rendered="#{match.homeScore==null or match.awayScore==null}"
-                                           title="Uzupełnij wynik" onclick="setScore.show()">
-                                <f:setPropertyActionListener value="#{match}" target="#{competition.selectedMatch}"/>
-                            </p:commandLink>
-                            <h:outputText value=" #{match.homeScore} - #{match.awayScore} "
-                                          rendered="#{match.homeScore!=null or match.awayScore!=null}"/>
-                            <h:outputText value="#{match.away.name}"/>
-                        </p:dataGrid>
-                    </p:panel>
+                    <p:column>
+                        <p:panel header="#{grupa.name}">
+                            <p:dataGrid var="match" value="#{grupa.matches}" columns="1">
+                                <p:column>
+                                    <h:outputText value="#{match.home.name}"/>
+                                    <p:commandLink value=" x - x "
+                                                   actionListener="#{competition.prepareModifyMatchResult}"
+                                                   rendered="#{(match.homeScore==null or match.awayScore==null) and authorization.authorized()}"
+                                                   title="Uzupełnij wynik" oncomplete="setScoreDlg.show()" update=":contentForm:setScore">
+                                        <f:attribute name="selectedMatch" value="#{match}"/>
+                                    </p:commandLink>
+                                    <h:outputText value=" x - x " rendered="#{(match.homeScore==null or match.awayScore==null) and !authorization.authorized()}"/>
+                                    <h:outputText value=" #{match.homeScore} - #{match.awayScore} "
+                                                  rendered="#{match.homeScore!=null or match.awayScore!=null}"/>
+                                    <h:outputText value="#{match.away.name}"/>
+                                </p:column>
+                            </p:dataGrid>
+                        </p:panel>
+                    </p:column>
                 </p:dataGrid>
             </p:panel>
 
-            <p:dialog id="setScore" header="Dodaj drużyne" widgetVar="setScoreDlg" modal="true" resizable="false"
+            <p:dialog id="setScore" header="Wynik meczu" widgetVar="setScoreDlg" modal="true" resizable="false"
                       draggable="false" position="top" showEffect="fade" hideEffect="fade">
-                <h:form id="setScoreForm">
+
+                <p:panelGrid columns="2">
                     <h:outputText value="#{competition.selectedMatch.home.name} : "/>
                     <p:inputText value="#{competition.selectedMatch.homeScore}"/>
 
-                    <h:outputText value="#{competition.selectedMatch.away.name}"/>
+                    <h:outputText value="#{competition.selectedMatch.away.name} : "/>
                     <p:inputText value="#{competition.selectedMatch.awayScore}"/>
 
-                    <p:commandButton value="Zapisz" actionListener="#{competition.modifyMatchResult}" oncomplete="setScoreDlg.hide()" update=":contentForm"/>
-                </h:form>
+                </p:panelGrid>
+                <p:commandButton value="Zapisz" actionListener="#{competition.modifyMatchResult}"
+                                 oncomplete="setScoreDlg.hide()" update=":contentForm"/>
+
             </p:dialog>
         </div>
     </ui:composition>

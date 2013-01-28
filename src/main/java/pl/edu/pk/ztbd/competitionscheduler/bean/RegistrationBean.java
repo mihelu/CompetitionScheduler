@@ -1,7 +1,7 @@
 package pl.edu.pk.ztbd.competitionscheduler.bean;
 
 import org.primefaces.context.RequestContext;
-import pl.edu.pk.ztbd.competitionscheduler.JSFUtil;
+import pl.edu.pk.ztbd.competitionscheduler.utils.JSFUtil;
 import pl.edu.pk.ztbd.competitionscheduler.dao.AuthenticationDAO;
 import pl.edu.pk.ztbd.competitionscheduler.dao.AuthenticationDAOImpl;
 import pl.edu.pk.ztbd.competitionscheduler.dto.User;

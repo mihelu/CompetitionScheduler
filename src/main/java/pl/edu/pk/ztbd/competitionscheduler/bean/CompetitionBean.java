@@ -1,9 +1,7 @@
 package pl.edu.pk.ztbd.competitionscheduler.bean;
 
-import org.primefaces.event.DragDropEvent;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
-import pl.edu.pk.ztbd.competitionscheduler.JSFUtil;
+import pl.edu.pk.ztbd.competitionscheduler.utils.JDBCUtil;
+import pl.edu.pk.ztbd.competitionscheduler.utils.JSFUtil;
 import pl.edu.pk.ztbd.competitionscheduler.dao.CompetitionDAO;
 import pl.edu.pk.ztbd.competitionscheduler.dao.CompetitionDAOImpl;
 import pl.edu.pk.ztbd.competitionscheduler.dto.Competition;
@@ -11,17 +9,11 @@ import pl.edu.pk.ztbd.competitionscheduler.dto.Group;
 import pl.edu.pk.ztbd.competitionscheduler.dto.Match;
 import pl.edu.pk.ztbd.competitionscheduler.dto.Team;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.imageio.ImageIO;
-import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -44,7 +36,7 @@ public class CompetitionBean {
     private int numberfGroups;
     private int numberOfTeamsInGroup;
     private int selectedGroupIndex;
-    private Match selectedMatch;
+    private Match selectedMatch = new Match();
 
     public CompetitionBean() {
 
@@ -68,7 +60,8 @@ public class CompetitionBean {
 
     public void navigateToDetails(ActionEvent event) {
         CompetitionDAO dao = new CompetitionDAOImpl();
-        //selectedCompetition = dao.get(selectedCompetition.getId());
+        Integer compId = JSFUtil.<Integer>getAttribute(event,"compId");
+        selectedCompetition = dao.get(compId);
         navigationBean.setPage("../competitonDetails");
     }
 
@@ -89,6 +82,10 @@ public class CompetitionBean {
     public void modify(ActionEvent event) {
         CompetitionDAO dao = new CompetitionDAOImpl();
         dao.modify(selectedCompetition);
+    }
+
+    public void prepareModifyMatchResult(ActionEvent event) {
+        selectedMatch = JSFUtil.<Match>getAttribute(event, "selectedMatch");
     }
 
     public void modifyMatchResult(ActionEvent event) {

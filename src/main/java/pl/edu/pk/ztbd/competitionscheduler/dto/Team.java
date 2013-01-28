@@ -13,6 +13,7 @@ public class Team {
     private int id;
     private String name;
     private String image;
+    private Long points;
     private List<Player> players;
 
     public int getId() {
@@ -37,6 +38,14 @@ public class Team {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Long getPoints() {
+        return points;
+    }
+
+    public void setPoints(Long points) {
+        this.points = points;
     }
 
     public List<Player> getPlayers() {

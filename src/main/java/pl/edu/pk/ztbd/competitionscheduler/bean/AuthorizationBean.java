@@ -1,7 +1,7 @@
 package pl.edu.pk.ztbd.competitionscheduler.bean;
 
 import org.primefaces.context.RequestContext;
-import pl.edu.pk.ztbd.competitionscheduler.JSFUtil;
+import pl.edu.pk.ztbd.competitionscheduler.utils.JSFUtil;
 import pl.edu.pk.ztbd.competitionscheduler.dao.AuthenticationDAO;
 import pl.edu.pk.ztbd.competitionscheduler.dao.AuthenticationDAOImpl;
 import pl.edu.pk.ztbd.competitionscheduler.dto.User;
@@ -12,7 +12,6 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.

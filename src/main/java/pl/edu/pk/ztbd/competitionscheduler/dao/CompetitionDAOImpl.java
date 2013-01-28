@@ -7,6 +7,7 @@ import pl.edu.pk.ztbd.competitionscheduler.dto.Competition;
 import pl.edu.pk.ztbd.competitionscheduler.dto.Group;
 import pl.edu.pk.ztbd.competitionscheduler.dto.Match;
 import pl.edu.pk.ztbd.competitionscheduler.dto.Team;
+import pl.edu.pk.ztbd.competitionscheduler.utils.JDBCUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class CompetitionDAOImpl implements CompetitionDAO {
     private static final String ADD_GROUP_MATCH = "{call PKG_COMP.addGroupMatch(?,?)}";
     private static final String REMOVE = "{call PKG_COMP.remove(?)}";
     private static final String MODIFY = "{call PKG_COMP.modify()}";
-    private static final String GET = "{call PKG_COMP.get()}";
+    private static final String GET = "{call PKG_COMP.get(?,?,?)}";
     private static final String FIND_ALL = "{call PKG_COMP.findAll(?)}";
     private static final String SET_MATCH = "{call PKG_COMP.modifyMatch(?,?,?)";
     private static final String FIND_ALL_TEAMS = "{call PKG_COMP.findAllTeams(?)}";
@@ -193,10 +194,10 @@ public class CompetitionDAOImpl implements CompetitionDAO {
     public void modifyMatchResult(Match match) {
         Connection connection = ConnectionResolver.getConnection();
         try {
-            CallableStatement callableStatement = connection.prepareCall(REMOVE);
+            CallableStatement callableStatement = connection.prepareCall(SET_MATCH);
             callableStatement.setInt(1, match.getId());
-            callableStatement.setInt(2, match.getHomeScore());
-            callableStatement.setInt(3, match.getAwayScore());
+            callableStatement.setLong(2, match.getHomeScore());
+            callableStatement.setLong(3, match.getAwayScore());
             callableStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -220,7 +221,58 @@ public class CompetitionDAOImpl implements CompetitionDAO {
         Competition result = new Competition();
         CallableStatement callableStatement = connection.prepareCall(GET);
         callableStatement.setInt(1, id);
+        callableStatement.registerOutParameter(2, OracleTypes.CURSOR);
+        callableStatement.registerOutParameter(3, OracleTypes.CURSOR);
         callableStatement.execute();
+        ResultSet rs = (ResultSet)callableStatement.getObject(2);
+        while (rs.next()) {
+            result.setId(id);
+            result.setName(rs.getString("NAME"));
+            result.setImage(rs.getString("DESCRIPTION"));
+            result.setDateFrom(rs.getDate("DATE_FROM"));
+            result.setDateTo(rs.getDate("DATE_TO"));
+            result.setImage(rs.getString("IMAGE"));
+        }
+
+        List<Group> groupList = new ArrayList<Group>();
+        ResultSet rsGroups = (ResultSet) callableStatement.getObject(3);
+        while(rsGroups.next()) {
+
+            Group group = new Group();
+            group.setId(rsGroups.getInt("ID"));
+            group.setName(rsGroups.getString("NAME"));
+            ResultSet groupTeams = (ResultSet)rsGroups.getObject("TEAMS");
+            List<Team> teamList = new ArrayList<Team>();
+            while(groupTeams.next()) {
+                Team team = new Team();
+                team.setId(groupTeams.getInt("ID"));
+                team.setName(groupTeams.getString("NAME"));
+                team.setImage(groupTeams.getString("IMAGE"));
+                team.setPoints(groupTeams.getLong("POINTS"));
+                teamList.add(team);
+            }
+            group.setTeams(teamList);
+
+            ResultSet groupMatches = (ResultSet)rsGroups.getObject("MATCHES");
+            List<Match> matchList = new ArrayList<Match>();
+            while(groupMatches.next()) {
+                Match match = new Match();
+                match.setId(groupMatches.getInt("ID"));
+                Team team = new Team();
+                team.setName(groupMatches.getString("HOME_TEAM"));
+                match.setHome(team);
+                team = new Team();
+                team.setName(groupMatches.getString("AWAY_TEAM"));
+                match.setAway(team);
+                match.setHomeScore(JDBCUtil.getLong(groupMatches, "HOME_SCORE"));
+                match.setAwayScore(JDBCUtil.getLong(groupMatches, "AWAY_SCORE"));
+                matchList.add(match);
+            }
+            group.setMatches(matchList);
+            groupList.add(group);
+        }
+
+        result.setGroups(groupList);
         return result;
     }
 
